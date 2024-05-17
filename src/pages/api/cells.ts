@@ -9,15 +9,16 @@ export default async function handler(
 		try {
 			const db = await dbPromise;
 			const cells = await db.all("SELECT * FROM cells");
-			res.send(cells);
+			res.status(200).json(cells);
 		} catch (error) {
-			let errorMessage = "An unknown error occurred";
+			console.error("Error fetching cells:", error);
 			if (error instanceof Error) {
-				errorMessage = error.message;
+				res.status(500).json({ message: error.message });
+			} else {
+				res.status(500).json({ message: "An unknown error occurred" });
 			}
-			res.status(500).send(errorMessage);
 		}
 	} else {
-		res.status(405).json({ error: "Method not allowed" });
+		res.status(405).json({ message: "Method Not Allowed" });
 	}
 }

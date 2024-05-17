@@ -13,11 +13,16 @@ export default async function handler(
 				"INSERT OR REPLACE INTO cells (row, column, isActive) VALUES (?, ?, ?)",
 				[row, column, isActive],
 			);
-			res.send({ id: result.lastID, row, column, isActive });
+			res.status(200).json({ id: result.lastID, row, column, isActive });
 		} catch (error) {
-			res.status(500).send(error.message);
+			console.error("Error updating cell:", error);
+			if (error instanceof Error) {
+				res.status(500).json({ message: error.message });
+			} else {
+				res.status(500).json({ message: "An unknown error occurred" });
+			}
 		}
 	} else {
-		res.status(405).json({ error: "Method not allowed" });
+		res.status(405).json({ message: "Method Not Allowed" });
 	}
 }
