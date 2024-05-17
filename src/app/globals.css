@@ -1,33 +1,76 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f0f0f0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(10, 60px); 
+  grid-template-rows: repeat(10, 60px); 
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.cell {
+  width: 60px;
+  height: 60px;
+  border: 1px solid transparent;
+  margin: 2px;
+  background-color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 5px 9px 0 rgba(0,0,0,0.2);
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.cell:hover {
+  box-shadow: 0 6px 12px 0 rgba(0,0,0,0.3);
+  filter: brightness(1.1);
+}
+
+.cell.active {
+  background-color: #98CE00;
+  border-color: #fff;
+  border-width: 2px;
+}
+
+.cell.highlight {
+  background-color: rgba(152, 206, 0, 0.5);
+}
+
+.cell.main-highlight {
+  background-color: #98CE00;
+}
+
+.cell.active-hover {
+  background-color: #98CE00;
+}
+
+.cell.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+  animation: shimmer 4s infinite linear;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.error {
+  color: red;
+  margin-bottom: 20px;
 }
