@@ -1,27 +1,19 @@
 "use client";
-
 import type React from "react";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import axios from "axios";
 import "./globals.css";
 
-interface Cell {
-	row: number;
-	column: number;
-	isActive: boolean;
-	key: string;
-}
-
-interface HoveredCell {
-	row: number;
-	column: number;
-}
-
-function App() {
+const Home = () => {
 	const gridSize = 10;
-	const [cells, setCells] = useState<Cell[]>([]);
-	const [hoveredCell, setHoveredCell] = useState<HoveredCell | null>(null);
-	const [error, setError] = useState<string>("");
+	const [cells, setCells] = useState<
+		Array<{ row: number; column: number; isActive: boolean; key: string }>
+	>([]);
+	const [hoveredCell, setHoveredCell] = useState<{
+		row: number;
+		column: number;
+	} | null>(null);
+	const [error, setError] = useState("");
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -39,9 +31,9 @@ function App() {
 	}, []);
 
 	const createInitialCells = (
-		data: { row: number; column: number; isActive: boolean }[],
-	): Cell[] => {
-		const initialCells: Cell[] = [];
+		data: Array<{ row: number; column: number; isActive: boolean }>,
+	) => {
+		const initialCells = [];
 		for (let row = 0; row < gridSize; row++) {
 			for (let column = 0; column < gridSize; column++) {
 				const cell = data.find((c) => c.row === row && c.column === column) || {
@@ -92,11 +84,7 @@ function App() {
 	}, []);
 
 	const handleKeyPress = useCallback(
-		(
-			event: React.KeyboardEvent<HTMLDivElement>,
-			row: number,
-			column: number,
-		) => {
+		(event: React.KeyboardEvent, row: number, column: number) => {
 			if (event.key === "Enter" || event.key === " ") {
 				toggleCell(row, column);
 			}
@@ -128,7 +116,6 @@ function App() {
 						onMouseEnter={() => handleMouseEnter(cell.row, cell.column)}
 						onMouseLeave={handleMouseLeave}
 						onKeyPress={(event) => handleKeyPress(event, cell.row, cell.column)}
-						onKeyDown={(event) => handleKeyPress(event, cell.row, cell.column)}
 						role="button"
 						tabIndex={0}
 					/>
@@ -150,6 +137,6 @@ function App() {
 			{grid}
 		</div>
 	);
-}
+};
 
-export default App;
+export default Home;

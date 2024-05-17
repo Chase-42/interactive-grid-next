@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { dbPromise } from "../../lib/db";
+import { db } from "../../lib/db";
+import { cells } from "../../lib/db";
 
 export default async function handler(
 	req: NextApiRequest,
@@ -8,12 +9,16 @@ export default async function handler(
 	if (req.method === "POST") {
 		try {
 			const { row, column, isActive } = req.body;
-			const db = await dbPromise;
-			const result = await db.run(
-				"INSERT OR REPLACE INTO cells (row, column, isActive) VALUES (?, ?, ?)",
-				[row, column, isActive],
-			);
-			res.status(200).json({ id: result.lastID, row, column, isActive });
+
+			await db
+				.insert(cells)
+				.values({ row, column, isActive })
+				.onConflictDoUpdate({
+					target: [cells.row, cells.column],
+					set: { isActive },
+				});
+
+			res.status(200).json({ row, column, isActive });
 		} catch (error) {
 			console.error("Error updating cell:", error);
 			if (error instanceof Error) {

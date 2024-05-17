@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { dbPromise } from "../../lib/db";
+import { db, cells } from "../../lib/db";
 
 export default async function handler(
 	req: NextApiRequest,
@@ -7,9 +7,8 @@ export default async function handler(
 ) {
 	if (req.method === "GET") {
 		try {
-			const db = await dbPromise;
-			const cells = await db.all("SELECT * FROM cells");
-			res.status(200).json(cells);
+			const result = await db.select().from(cells);
+			res.status(200).json(result);
 		} catch (error) {
 			console.error("Error fetching cells:", error);
 			if (error instanceof Error) {
