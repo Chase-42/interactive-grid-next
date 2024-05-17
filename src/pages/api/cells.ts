@@ -11,7 +11,11 @@ export default async function handler(
 			const cells = await db.all("SELECT * FROM cells");
 			res.send(cells);
 		} catch (error) {
-			res.status(500).send(error.message);
+			let errorMessage = "An unknown error occurred";
+			if (error instanceof Error) {
+				errorMessage = error.message;
+			}
+			res.status(500).send(errorMessage);
 		}
 	} else {
 		res.status(405).json({ error: "Method not allowed" });
