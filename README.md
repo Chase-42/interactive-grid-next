@@ -1,4 +1,4 @@
-`# Interactive Grid Project
+# Interactive Grid Project
 
 ## Overview
 
@@ -6,88 +6,94 @@ This project is an interactive grid application built with React and Next.js usi
 
 ## Features
 
-- **Interactive Grid**: Users can toggle cells on and off by clicking or using keyboard interactions.
-- **Persistent State**: The state of the grid is stored in a PostgreSQL database, ensuring data persistence.
-- **Responsive Design**: The grid layout is responsive and adapts to different screen sizes.
-- **Accessible**: The application includes keyboard support for better accessibility.
+-  **Interactive Grid**: Users can toggle cells on and off by clicking or using keyboard interactions.
+
+-  **Persistent State**: The state of the grid is stored in a PostgreSQL database, ensuring data persistence.
+
+-  **Responsive Design**: The grid layout is responsive and adapts to different screen sizes.
+
+-  **Accessible**: The application includes keyboard support for better accessibility.
 
 ## Technologies Used
 
-- **Frontend**: React, Next.js (App Directory), TypeScript
-- **Database**: PostgreSQL, Drizzle ORM
-- **Styling**: Custom CSS
-- **Deployment**: Vercel
+-  **Frontend**: React, Next.js (App Directory), TypeScript
+
+-  **Database**: PostgreSQL, Drizzle ORM
+
+-  **Styling**: Custom CSS
+
+-  **Deployment**: Vercel
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js
+
 - npm or yarn
+
 - PostgreSQL database
 
 ### Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/interactive-grid.git
-   cd interactive-grid `
+1.  **Clone the repository**
 
-1.  **Install dependencies**
+- git clone https://github.com/Chase-42/interactive-grid-next
 
-    bash
+- cd interactive-grid
 
--   `npm install
-    # or
-    yarn install`
+2.  **Install dependencies**
 
-    -   **Set up the database**
+- npm install or yarn install
 
-    -   Create a PostgreSQL database and obtain the connection string.
-    -   Add the connection string to your `.env.local` file:
+-  **Set up the database**
 
-        env
+- Create a PostgreSQL database and obtain the connection string.
 
-        -   -   `POSTGRES_URL=your_postgres_connection_string`
+- Add the connection string to your `.env.local` file:
 
-        -   **Run the application**
+env
 
-    bash
+-  -  `POSTGRES_URL=your_postgres_connection_string`
 
-1.  `npm run dev
-    # or
-    yarn dev`
+-  **Run the application**
 
-    The application will be available at `http://localhost:3000`.
+The application will be available at `http://localhost:3000`.
 
 Usage
+
 -----
 
--   **Toggle Cell State**: Click on any cell in the grid to toggle its state between active and inactive.
--   **Keyboard Support**: Use the Enter or Space key to toggle the state of a focused cell.
--   **Switch Themes**: Click the "Toggle Theme" button to switch between light and dark modes.
+-  **Toggle Cell State**: Click on any cell in the grid to toggle its state between active and inactive.
+
+-  **Keyboard Support**: Use the Enter or Space key to toggle the state of a focused cell.
+
+-  **Switch Themes**: Click the "Toggle Theme" button to switch between light and dark modes.
 
 Deployment
+
 ----------
 
 The project is deployed on Vercel. To deploy your own instance:
 
-1.  Fork the repository on GitHub
-2.  Create a new project on Vercel and link it to your GitHub repository
-3.  Set environment variables on Vercel
-    -   Add your PostgreSQL connection string as `POSTGRES_URL`.
+1. Fork the repository on GitHub
+
+2. Create a new project on Vercel and link it to your GitHub repository
+
+3. Set environment variables on Vercel
+
+- Add your PostgreSQL connection string as `POSTGRES_URL`.
 
 Demo
+
 ----
 
-Check out the live demo: Interactive Grid Demo
-
+Check out the live demo: https://interactive-grid-next-dif8ke5rk-chase-collins-projects.vercel.app/
 
 Example .env.local
+
 ------------------
 
 env
 
 `POSTGRES_URL="postgres://default:password@host:port/database?sslmode=require"`
-
-This `README.md` provides a comprehensive overview of your project, including installation instructions, usage details, and project structure, making it easy for potential employers to understand and set up your project.
