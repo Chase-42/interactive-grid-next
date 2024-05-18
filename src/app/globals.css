@@ -4,7 +4,7 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #ffffff; /* White background */
+  background: #ffffff; 
 }
 
 .grid {
@@ -21,7 +21,7 @@ html, body {
   height: 60px;
   border: 1px solid transparent;
   margin: 2px;
-  background-color: #d3d3d3; /* Grey cells */
+  background-color: #d3d3d3; 
   border-radius: 5px;
   cursor: pointer;
   box-shadow: 0 5px 9px 0 rgba(0,0,0,0.2);
@@ -37,13 +37,13 @@ html, body {
 }
 
 .cell.active {
-  background-color: #000000; /* Black for active cells */
+  background-color: #000000; 
   border-color: #fff;
   border-width: 2px;
 }
 
 .cell.highlight {
-  background-color: rgba(211, 211, 211, 0.5); /* Semi-transparent grey */
+  background-color: rgba(211, 211, 211, 0.5); 
 }
 
 .cell.main-highlight {

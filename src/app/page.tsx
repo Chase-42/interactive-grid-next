@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import axios from "axios";
 import "./globals.css";
 
-const Home = () => {
+const Home: React.FC = () => {
 	const gridSize = 10;
 	const [cells, setCells] = useState<
 		Array<{ row: number; column: number; isActive: boolean; key: string }>
@@ -14,6 +14,26 @@ const Home = () => {
 		column: number;
 	} | null>(null);
 	const [error, setError] = useState("");
+
+	const createInitialCells = useCallback(
+		(data: Array<{ row: number; column: number; isActive: boolean }>) => {
+			const initialCells = [];
+			for (let row = 0; row < gridSize; row++) {
+				for (let column = 0; column < gridSize; column++) {
+					const cell = data.find(
+						(c) => c.row === row && c.column === column,
+					) || {
+						row,
+						column,
+						isActive: false,
+					};
+					initialCells.push({ ...cell, key: `${row}-${column}` });
+				}
+			}
+			return initialCells;
+		},
+		[],
+	);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -28,24 +48,7 @@ const Home = () => {
 		};
 
 		fetchData();
-	}, []);
-
-	const createInitialCells = (
-		data: Array<{ row: number; column: number; isActive: boolean }>,
-	) => {
-		const initialCells = [];
-		for (let row = 0; row < gridSize; row++) {
-			for (let column = 0; column < gridSize; column++) {
-				const cell = data.find((c) => c.row === row && c.column === column) || {
-					row,
-					column,
-					isActive: false,
-				};
-				initialCells.push({ ...cell, key: `${row}-${column}` });
-			}
-		}
-		return initialCells;
-	};
+	}, [createInitialCells]);
 
 	const toggleCell = useCallback(
 		async (row: number, column: number) => {
