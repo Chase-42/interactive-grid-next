@@ -38,29 +38,27 @@ This project is an interactive grid application built with React and Next.js usi
 
 1.  **Clone the repository**
 
-- git clone https://github.com/Chase-42/interactive-grid-next
+  - git clone https://github.com/Chase-42/interactive-grid-next
 
-- cd interactive-grid
+  - cd interactive-grid
 
 2.  **Install dependencies**
 
-- npm install or yarn install
+  - npm install or yarn install
 
--  **Set up the database**
+3.  **Set up the database**
 
-- Create a PostgreSQL database and obtain the connection string.
+  - Create a PostgreSQL database and obtain the connection string.
 
-- Add the connection string to your `.env.local` file:
+  - Add the connection string to your `.env.local` file:
 
-env
+-   `POSTGRES_URL=your_postgres_connection_string`
 
--  -  `POSTGRES_URL=your_postgres_connection_string`
-
--  **Run the application**
+4.  **Run the application**
 
 The application will be available at `http://localhost:3000`.
 
-Usage
+## Usage
 
 -----
 
@@ -70,7 +68,7 @@ Usage
 
 -  **Switch Themes**: Click the "Toggle Theme" button to switch between light and dark modes.
 
-Deployment
+## Deployment
 
 ----------
 
@@ -84,7 +82,7 @@ The project is deployed on Vercel. To deploy your own instance:
 
 - Add your PostgreSQL connection string as `POSTGRES_URL`.
 
-Demo
+## Demo
 
 ----
 
