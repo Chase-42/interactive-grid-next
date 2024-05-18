@@ -10,11 +10,9 @@ import {
 	uniqueIndex,
 } from "drizzle-orm/pg-core";
 
-// Initialize drizzle with Vercel PostgreSQL
 export const db = drizzle(sql);
 
 export const createTable = pgTableCreator((name) => `interactive_grid_${name}`);
-// Define the cells table
 
 export const cells = createTable(
 	"cells",
