@@ -4,14 +4,14 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f0f0f0;
+  background: #ffffff; /* White background */
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(10, 60px); 
   grid-template-rows: repeat(10, 60px); 
-  gap: 4px;
+  gap: 7px;
   justify-content: center;
   align-items: center;
 }
@@ -21,7 +21,7 @@ html, body {
   height: 60px;
   border: 1px solid transparent;
   margin: 2px;
-  background-color: white;
+  background-color: #d3d3d3; /* Grey cells */
   border-radius: 5px;
   cursor: pointer;
   box-shadow: 0 5px 9px 0 rgba(0,0,0,0.2);
@@ -37,21 +37,21 @@ html, body {
 }
 
 .cell.active {
-  background-color: #98CE00;
+  background-color: #000000; /* Black for active cells */
   border-color: #fff;
   border-width: 2px;
 }
 
 .cell.highlight {
-  background-color: rgba(152, 206, 0, 0.5);
+  background-color: rgba(211, 211, 211, 0.5); /* Semi-transparent grey */
 }
 
 .cell.main-highlight {
-  background-color: #98CE00;
+  background-color: #000000;
 }
 
 .cell.active-hover {
-  background-color: #98CE00;
+  background-color: #000000;
 }
 
 .cell.active::before {
