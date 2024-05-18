@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+`# Interactive Grid Project
+
+## Overview
+
+This project is an interactive grid application built with React and Next.js using the latest App Directory features. It allows users to toggle the state of cells within a grid. The grid state is persisted using a PostgreSQL database.
+
+## Features
+
+- **Interactive Grid**: Users can toggle cells on and off by clicking or using keyboard interactions.
+- **Persistent State**: The state of the grid is stored in a PostgreSQL database, ensuring data persistence.
+- **Responsive Design**: The grid layout is responsive and adapts to different screen sizes.
+- **Accessible**: The application includes keyboard support for better accessibility.
+
+## Technologies Used
+
+- **Frontend**: React, Next.js (App Directory), TypeScript
+- **Database**: PostgreSQL, Drizzle ORM
+- **Styling**: Custom CSS
+- **Deployment**: Vercel
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js
+- npm or yarn
+- PostgreSQL database
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/interactive-grid.git
+   cd interactive-grid `
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1.  **Install dependencies**
 
-## Learn More
+    bash
 
-To learn more about Next.js, take a look at the following resources:
+-   `npm install
+    # or
+    yarn install`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    -   **Set up the database**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+    -   Create a PostgreSQL database and obtain the connection string.
+    -   Add the connection string to your `.env.local` file:
 
-## Deploy on Vercel
+        env
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+        -   -   `POSTGRES_URL=your_postgres_connection_string`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+        -   **Run the application**
+
+    bash
+
+1.  `npm run dev
+    # or
+    yarn dev`
+
+    The application will be available at `http://localhost:3000`.
+
+Usage
+-----
+
+-   **Toggle Cell State**: Click on any cell in the grid to toggle its state between active and inactive.
+-   **Keyboard Support**: Use the Enter or Space key to toggle the state of a focused cell.
+-   **Switch Themes**: Click the "Toggle Theme" button to switch between light and dark modes.
+
+Deployment
+----------
+
+The project is deployed on Vercel. To deploy your own instance:
+
+1.  Fork the repository on GitHub
+2.  Create a new project on Vercel and link it to your GitHub repository
+3.  Set environment variables on Vercel
+    -   Add your PostgreSQL connection string as `POSTGRES_URL`.
+
+Demo
+----
+
+Check out the live demo: Interactive Grid Demo
+
+
+Example .env.local
+------------------
+
+env
+
+`POSTGRES_URL="postgres://default:password@host:port/database?sslmode=require"`
+
+This `README.md` provides a comprehensive overview of your project, including installation instructions, usage details, and project structure, making it easy for potential employers to understand and set up your project.
