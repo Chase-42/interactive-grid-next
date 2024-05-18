@@ -24,6 +24,13 @@ This project is an interactive grid application built with React and Next.js usi
 
 -  **Deployment**: Vercel
 
+## Demo
+
+----
+
+Check out the live demo: https://interactive-grid-next-dif8ke5rk-chase-collins-projects.vercel.app/
+
+
 ## Getting Started
 
 ### Prerequisites
@@ -82,16 +89,5 @@ The project is deployed on Vercel. To deploy your own instance:
 
 - Add your PostgreSQL connection string as `POSTGRES_URL`.
 
-## Demo
 
-----
 
-Check out the live demo: https://interactive-grid-next-dif8ke5rk-chase-collins-projects.vercel.app/
-
-Example .env.local
-
-------------------
-
-env
-
-`POSTGRES_URL="postgres://default:password@host:port/database?sslmode=require"`
