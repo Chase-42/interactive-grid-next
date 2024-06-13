@@ -62,8 +62,10 @@ Check out the live demo: https://interactive-grid-next-dif8ke5rk-chase-collins-p
 -   `POSTGRES_URL=your_postgres_connection_string`
 
 4.  **Run the application**
-
-The application will be available at `http://localhost:3000`.
+  
+  - NPM or Yarn run dev
+  
+  - The application will be available at `http://localhost:3000`.
 
 ## Usage
 
@@ -72,8 +74,6 @@ The application will be available at `http://localhost:3000`.
 -  **Toggle Cell State**: Click on any cell in the grid to toggle its state between active and inactive.
 
 -  **Keyboard Support**: Use the Enter or Space key to toggle the state of a focused cell.
-
--  **Switch Themes**: Click the "Toggle Theme" button to switch between light and dark modes.
 
 ## Deployment
 
