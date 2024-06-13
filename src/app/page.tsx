@@ -2,6 +2,7 @@
 import type React from "react";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import axios from "axios";
+import ClipLoader from "react-spinners/ClipLoader";
 import "./globals.css";
 
 const Home: React.FC = () => {
@@ -14,6 +15,7 @@ const Home: React.FC = () => {
 		column: number;
 	} | null>(null);
 	const [error, setError] = useState("");
+	const [loading, setLoading] = useState(true);
 
 	const createInitialCells = useCallback(
 		(data: Array<{ row: number; column: number; isActive: boolean }>) => {
@@ -44,6 +46,8 @@ const Home: React.FC = () => {
 			} catch (error) {
 				console.error("Error fetching cells:", error);
 				setError("Failed to load cells from the server.");
+			} finally {
+				setLoading(false);
 			}
 		};
 
@@ -135,9 +139,20 @@ const Home: React.FC = () => {
 	);
 
 	return (
-		<div className="grid">
-			{error && <div className="error">{error}</div>}
-			{grid}
+		<div className="container">
+			{loading ? (
+				<div className="loading-container">
+					<ClipLoader color={"#000000"} loading={loading} size={100} />
+					<p>Loading cells...</p>
+				</div>
+			) : (
+				<>
+					<div className="grid">
+						{error && <div className="error">{error}</div>}
+						{grid}
+					</div>
+				</>
+			)}
 		</div>
 	);
 };

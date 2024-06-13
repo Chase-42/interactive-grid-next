@@ -11,15 +11,16 @@
 		"db:studio": "drizzle-kit studio"
 	},
 	"dependencies": {
+		"@t3-oss/env-nextjs": "^0.10.1",
+		"@vercel/postgres": "^0.7.2",
 		"axios": "^1.6.8",
+		"drizzle-kit": "^0.21.0",
+		"drizzle-orm": "^0.29.4",
 		"next": "14.2.3",
+		"postgres": "^3.4.3",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
-		"@vercel/postgres": "^0.7.2",
-		"drizzle-orm": "^0.29.4",
-		"postgres": "^3.4.3",
-		"drizzle-kit": "^0.21.0",
-		"@t3-oss/env-nextjs": "^0.10.1"
+		"react-spinners": "^0.13.8"
 	},
 	"devDependencies": {
 		"@types/node": "^20",
