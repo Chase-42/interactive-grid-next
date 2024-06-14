@@ -5,7 +5,7 @@ import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 import "./globals.css";
 
-const Home: React.FC = () => {
+const Home = () => {
 	const gridSize = 10;
 	const [cells, setCells] = useState<
 		Array<{ row: number; column: number; isActive: boolean; key: string }>
@@ -16,6 +16,7 @@ const Home: React.FC = () => {
 	} | null>(null);
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(true);
+	const [color, setColor] = useState<string>("#000000");
 
 	const createInitialCells = useCallback(
 		(data: Array<{ row: number; column: number; isActive: boolean }>) => {
@@ -60,10 +61,18 @@ const Home: React.FC = () => {
 			const isActive = cell ? !cell.isActive : true;
 
 			const updatedCells = cells.map((c) =>
-				c.row === row && c.column === column ? { ...c, isActive } : c,
+				c.row === row && c.column === column
+					? { ...c, isActive, color: isActive ? color : "#d3d3d3" }
+					: c,
 			);
 			if (!cell) {
-				updatedCells.push({ row, column, isActive, key: `${row}-${column}` });
+				updatedCells.push({
+					row,
+					column,
+					isActive,
+					key: `${row}-${column}`,
+					color: isActive ? color : "#d3d3d3",
+				});
 			}
 			setCells(updatedCells);
 
@@ -72,6 +81,7 @@ const Home: React.FC = () => {
 					row,
 					column,
 					isActive,
+					color: isActive ? color : "#d3d3d3",
 				});
 				console.log("Cell updated successfully on the server.");
 			} catch (error) {
@@ -79,7 +89,7 @@ const Home: React.FC = () => {
 				setError("Error updating cell on the server.");
 			}
 		},
-		[cells],
+		[cells, color],
 	);
 
 	const handleMouseEnter = useCallback((row: number, column: number) => {
@@ -125,6 +135,7 @@ const Home: React.FC = () => {
 						onKeyPress={(event) => handleKeyPress(event, cell.row, cell.column)}
 						role="button"
 						tabIndex={0}
+						style={{ backgroundColor: cell.isActive ? color : "#d3d3d3" }}
 					/>
 				);
 			}),
@@ -135,6 +146,7 @@ const Home: React.FC = () => {
 			handleMouseEnter,
 			handleMouseLeave,
 			handleKeyPress,
+			color,
 		],
 	);
 
@@ -147,6 +159,17 @@ const Home: React.FC = () => {
 				</div>
 			) : (
 				<>
+					<div className="controls">
+						<label htmlFor="colorPicker" className="color-label">
+							Pick Cell Color:
+						</label>
+						<input
+							type="color"
+							value={color}
+							onChange={(e) => setColor(e.target.value)}
+							className="color-picker"
+						/>
+					</div>
 					<div className="grid">
 						{error && <div className="error">{error}</div>}
 						{grid}
