@@ -9,6 +9,8 @@ import {
 	useQueryClient,
 	QueryClient,
 	QueryClientProvider,
+	type UseQueryResult,
+	type UseMutationResult,
 } from "@tanstack/react-query";
 import LoadingSpinner from "./components/LoadingSpinner";
 import ErrorMessage from "./components/ErrorMessage";
@@ -16,11 +18,17 @@ import GridControls from "./components/GridControls";
 import Grid from "./components/Grid";
 import "./globals.css";
 
-// Create a query client
+type Cell = {
+	row: number;
+	column: number;
+	isActive: boolean;
+	key: string;
+};
+
 const queryClient = new QueryClient();
 
-const fetchCells = async () => {
-	const response = await axios.get("/api/cells");
+const fetchCells = async (): Promise<Cell[]> => {
+	const response = await axios.get<Cell[]>("/api/cells");
 	return response.data;
 };
 
@@ -28,7 +36,7 @@ const updateCell = async (cell: {
 	row: number;
 	column: number;
 	isActive: boolean;
-}) => {
+}): Promise<void> => {
 	await axios.post("/api/update", cell);
 };
 
@@ -47,37 +55,59 @@ const HomeComponent: React.FC = () => {
 		isLoading,
 		isError,
 		error,
-	} = useQuery({
+	}: UseQueryResult<Cell[], Error> = useQuery<Cell[], Error>({
 		queryKey: ["cells"],
 		queryFn: fetchCells,
 	});
 
-	const mutation = useMutation({
+	const mutation: UseMutationResult<
+		void,
+		Error,
+		{ row: number; column: number; isActive: boolean }
+	> = useMutation({
 		mutationFn: updateCell,
-		onSuccess: () => {
+		onMutate: async (newCell) => {
+			await queryClient.cancelQueries({ queryKey: ["cells"] });
+
+			const previousCells = queryClient.getQueryData<Cell[]>(["cells"]);
+
+			if (previousCells) {
+				queryClient.setQueryData<Cell[]>(["cells"], (oldCells) =>
+					oldCells?.map((cell) =>
+						cell.row === newCell.row && cell.column === newCell.column
+							? { ...cell, isActive: newCell.isActive }
+							: cell,
+					),
+				);
+			}
+
+			return { previousCells };
+		},
+		onError: (err, newCell, context) => {
+			if (context?.previousCells) {
+				queryClient.setQueryData<Cell[]>(["cells"], context.previousCells);
+			}
+		},
+		onSettled: () => {
 			queryClient.invalidateQueries({ queryKey: ["cells"] });
 		},
 	});
 
-	const createInitialCells = useCallback(
-		(data: Array<{ row: number; column: number; isActive: boolean }>) => {
-			const initialCells = [];
-			for (let row = 0; row < gridSize; row++) {
-				for (let column = 0; column < gridSize; column++) {
-					const cell = data.find(
-						(c) => c.row === row && c.column === column,
-					) || {
-						row,
-						column,
-						isActive: false,
-					};
-					initialCells.push({ ...cell, key: `${row}-${column}` });
-				}
+	const createInitialCells = useCallback((data: Cell[]): Cell[] => {
+		const initialCells: Cell[] = [];
+		for (let row = 0; row < gridSize; row++) {
+			for (let column = 0; column < gridSize; column++) {
+				const cell = data.find((c) => c.row === row && c.column === column) || {
+					row,
+					column,
+					isActive: false,
+					key: `${row}-${column}`,
+				};
+				initialCells.push(cell);
 			}
-			return initialCells;
-		},
-		[],
-	);
+		}
+		return initialCells;
+	}, []);
 
 	const initialCells = useMemo(
 		() => createInitialCells(cells),
@@ -174,7 +204,7 @@ const HomeComponent: React.FC = () => {
 	);
 };
 
-const Home = () => (
+const Home: React.FC = () => (
 	<QueryClientProvider client={queryClient}>
 		<HomeComponent />
 	</QueryClientProvider>
