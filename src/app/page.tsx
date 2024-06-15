@@ -1,26 +1,63 @@
 "use client";
 
 import type React from "react";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import axios from "axios";
+import {
+	useQuery,
+	useMutation,
+	useQueryClient,
+	QueryClient,
+	QueryClientProvider,
+} from "@tanstack/react-query";
 import LoadingSpinner from "./components/LoadingSpinner";
 import ErrorMessage from "./components/ErrorMessage";
 import GridControls from "./components/GridControls";
 import Grid from "./components/Grid";
 import "./globals.css";
 
-const Home = () => {
+// Create a query client
+const queryClient = new QueryClient();
+
+const fetchCells = async () => {
+	const response = await axios.get("/api/cells");
+	return response.data;
+};
+
+const updateCell = async (cell: {
+	row: number;
+	column: number;
+	isActive: boolean;
+}) => {
+	await axios.post("/api/update", cell);
+};
+
+const HomeComponent: React.FC = () => {
 	const gridSize = 10;
-	const [cells, setCells] = useState<
-		Array<{ row: number; column: number; isActive: boolean; key: string }>
-	>([]);
 	const [hoveredCell, setHoveredCell] = useState<{
 		row: number;
 		column: number;
 	} | null>(null);
-	const [error, setError] = useState<string>("");
-	const [loading, setLoading] = useState<boolean>(true);
 	const [activeColor, setActiveColor] = useState<string>("#000000");
+
+	const queryClient = useQueryClient();
+
+	const {
+		data: cells = [],
+		isLoading,
+		isError,
+		error,
+	} = useQuery({
+		queryKey: ["cells"],
+		queryFn: fetchCells,
+	});
+
+	const mutation = useMutation({
+		mutationFn: updateCell,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["cells"] });
+		},
+	});
 
 	const createInitialCells = useCallback(
 		(data: Array<{ row: number; column: number; isActive: boolean }>) => {
@@ -42,43 +79,20 @@ const Home = () => {
 		[],
 	);
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await axios.get("/api/cells");
-				console.log("Fetched cells from the server:", response.data);
-				setCells(createInitialCells(response.data));
-			} catch (error) {
-				console.error("Error fetching cells:", error);
-				setError("Failed to load cells from the server.");
-			} finally {
-				setLoading(false);
-			}
-		};
-
-		fetchData();
-	}, [createInitialCells]);
+	const initialCells = useMemo(
+		() => createInitialCells(cells),
+		[cells, createInitialCells],
+	);
 
 	const toggleCell = useCallback(
-		async (row: number, column: number) => {
-			const cell = cells.find((c) => c.row === row && c.column === column);
-			const isActive = cell ? !cell.isActive : true;
-
-			const updatedCells = cells.map((c) =>
-				c.row === row && c.column === column ? { ...c, isActive } : c,
+		(row: number, column: number) => {
+			const cell = initialCells.find(
+				(c) => c.row === row && c.column === column,
 			);
-			if (!cell) {
-				updatedCells.push({ row, column, isActive, key: `${row}-${column}` });
-			}
-			setCells(updatedCells);
-
-			try {
-				await axios.post("/api/update", { row, column, isActive });
-			} catch (error) {
-				setError("Error updating cell on the server.");
-			}
+			const isActive = cell ? !cell.isActive : true;
+			mutation.mutate({ row, column, isActive });
 		},
-		[cells],
+		[initialCells, mutation],
 	);
 
 	const handleMouseEnter = useCallback((row: number, column: number) => {
@@ -104,7 +118,7 @@ const Home = () => {
 
 	const grid = useMemo(
 		() =>
-			cells.map((cell) => {
+			initialCells.map((cell) => {
 				let className = `cell${cell.isActive ? " active" : ""}`;
 				if (
 					hoveredCell &&
@@ -133,7 +147,7 @@ const Home = () => {
 				);
 			}),
 		[
-			cells,
+			initialCells,
 			hoveredCell,
 			toggleCell,
 			handleMouseEnter,
@@ -145,9 +159,9 @@ const Home = () => {
 
 	return (
 		<div className="container">
-			{error && <ErrorMessage message={error} />}
-			{loading && <LoadingSpinner />}
-			{!loading && !error && (
+			{isError && <ErrorMessage message={(error as Error).message} />}
+			{isLoading && <LoadingSpinner />}
+			{!isLoading && !isError && (
 				<>
 					<GridControls
 						activeColor={activeColor}
@@ -159,5 +173,11 @@ const Home = () => {
 		</div>
 	);
 };
+
+const Home = () => (
+	<QueryClientProvider client={queryClient}>
+		<HomeComponent />
+	</QueryClientProvider>
+);
 
 export default Home;
