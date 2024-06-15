@@ -1,27 +1,25 @@
-/* Global Styles */
+
 html, body {
   height: 100%;
   margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f7f9fc; /* Light grey background */
-  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #f0f0f0 0%, #ffffff 100%); 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333; 
 }
 
-/* Container for the entire application */
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  border: 2px solid #e0e0e0;
   border-radius: 10px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  background: #ffffff;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); 
+  background-color: #fff; 
 }
 
-/* Controls section styling */
 .controls {
   margin-bottom: 20px;
   display: flex;
@@ -30,46 +28,41 @@ html, body {
 }
 
 .color-label {
-  margin-right: 10px;
-  font-size: 16px;
-  color: #333;
   font-weight: bold;
+  font-size: 14px;
 }
 
 .color-picker {
-  width: 40px;
-  height: 40px;
-  border: none;
-  cursor: pointer;
+  width: 50px;
+  height: 30px;
+  border: 2px solid #ccc; 
   border-radius: 5px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  cursor: pointer;
+  transition: border-color 0.3s; 
 }
 
 .color-picker:hover {
-  transform: scale(1.1);
+  border-color: #888; 
 }
 
-/* Grid styling */
 .grid {
   display: grid;
-  grid-template-columns: repeat(10, 60px); 
-  grid-template-rows: repeat(10, 60px); 
+  grid-template-columns: repeat(10, 60px);
+  grid-template-rows: repeat(10, 60px);
   gap: 7px;
   justify-content: center;
   align-items: center;
+  margin-top: 10px; 
 }
 
-/* Cell styling */
 .cell {
   width: 60px;
   height: 60px;
   border: 1px solid transparent;
-  margin: 2px;
-  background-color: #d3d3d3; /* Grey cells */
-  border-radius: 10px;
+  background-color: #d3d3d3; 
+  border-radius: 5px;
   cursor: pointer;
-  box-shadow: 0 5px 9px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 9px 0 rgba(0,0,0,0.2);
   transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
   position: relative;
   overflow: hidden;
@@ -77,18 +70,18 @@ html, body {
 }
 
 .cell:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 12px 0 rgba(0,0,0,0.3);
   filter: brightness(1.1);
 }
 
 .cell.active {
-  background-color: #000000; /* Black for active cells */
+  background-color: #000000; 
   border-color: #fff;
   border-width: 2px;
 }
 
 .cell.highlight {
-  background-color: rgba(211, 211, 211, 0.5); /* Semi-transparent grey */
+  background-color: rgba(211, 211, 211, 0.5); 
 }
 
 .cell.main-highlight {
@@ -115,18 +108,28 @@ html, body {
   100% { transform: translateX(100%); }
 }
 
-/* Loading spinner styling */
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-/* Error message styling */
 .error {
   color: red;
   margin-bottom: 20px;
   font-weight: bold;
-  font-size: 18px;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.spinner {
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

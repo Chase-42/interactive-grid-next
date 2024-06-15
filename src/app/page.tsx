@@ -1,8 +1,12 @@
 "use client";
+
 import type React from "react";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import axios from "axios";
-import ClipLoader from "react-spinners/ClipLoader";
+import LoadingSpinner from "./components/LoadingSpinner";
+import ErrorMessage from "./components/ErrorMessage";
+import GridControls from "./components/GridControls";
+import Grid from "./components/Grid";
 import "./globals.css";
 
 const Home = () => {
@@ -14,9 +18,9 @@ const Home = () => {
 		row: number;
 		column: number;
 	} | null>(null);
-	const [error, setError] = useState("");
-	const [loading, setLoading] = useState(true);
-	const [color, setColor] = useState<string>("#000000");
+	const [error, setError] = useState<string>("");
+	const [loading, setLoading] = useState<boolean>(true);
+	const [activeColor, setActiveColor] = useState<string>("#000000");
 
 	const createInitialCells = useCallback(
 		(data: Array<{ row: number; column: number; isActive: boolean }>) => {
@@ -61,35 +65,20 @@ const Home = () => {
 			const isActive = cell ? !cell.isActive : true;
 
 			const updatedCells = cells.map((c) =>
-				c.row === row && c.column === column
-					? { ...c, isActive, color: isActive ? color : "#d3d3d3" }
-					: c,
+				c.row === row && c.column === column ? { ...c, isActive } : c,
 			);
 			if (!cell) {
-				updatedCells.push({
-					row,
-					column,
-					isActive,
-					key: `${row}-${column}`,
-					color: isActive ? color : "#d3d3d3",
-				});
+				updatedCells.push({ row, column, isActive, key: `${row}-${column}` });
 			}
 			setCells(updatedCells);
 
 			try {
-				await axios.post("/api/update", {
-					row,
-					column,
-					isActive,
-					color: isActive ? color : "#d3d3d3",
-				});
-				console.log("Cell updated successfully on the server.");
+				await axios.post("/api/update", { row, column, isActive });
 			} catch (error) {
-				console.error("Error updating cell:", error);
 				setError("Error updating cell on the server.");
 			}
 		},
-		[cells, color],
+		[cells],
 	);
 
 	const handleMouseEnter = useCallback((row: number, column: number) => {
@@ -108,6 +97,10 @@ const Home = () => {
 		},
 		[toggleCell],
 	);
+
+	const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setActiveColor(event.target.value);
+	};
 
 	const grid = useMemo(
 		() =>
@@ -135,7 +128,7 @@ const Home = () => {
 						onKeyPress={(event) => handleKeyPress(event, cell.row, cell.column)}
 						role="button"
 						tabIndex={0}
-						style={{ backgroundColor: cell.isActive ? color : "#d3d3d3" }}
+						style={{ backgroundColor: cell.isActive ? activeColor : "#d3d3d3" }}
 					/>
 				);
 			}),
@@ -146,34 +139,21 @@ const Home = () => {
 			handleMouseEnter,
 			handleMouseLeave,
 			handleKeyPress,
-			color,
+			activeColor,
 		],
 	);
 
 	return (
 		<div className="container">
-			{loading ? (
-				<div className="loading-container">
-					<ClipLoader color={"#000000"} loading={loading} size={100} />
-					<p>Loading cells...</p>
-				</div>
-			) : (
+			{error && <ErrorMessage message={error} />}
+			{loading && <LoadingSpinner />}
+			{!loading && !error && (
 				<>
-					<div className="controls">
-						<label htmlFor="colorPicker" className="color-label">
-							Pick Cell Color:
-						</label>
-						<input
-							type="color"
-							value={color}
-							onChange={(e) => setColor(e.target.value)}
-							className="color-picker"
-						/>
-					</div>
-					<div className="grid">
-						{error && <div className="error">{error}</div>}
-						{grid}
-					</div>
+					<GridControls
+						activeColor={activeColor}
+						handleColorChange={handleColorChange}
+					/>
+					<Grid grid={grid} />
 				</>
 			)}
 		</div>
