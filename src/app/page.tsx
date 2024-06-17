@@ -142,6 +142,18 @@ const HomeComponent: React.FC = () => {
 		[toggleCell],
 	);
 
+	const handleReset = useCallback(() => {
+		for (const cell of cells) {
+			if (cell.isActive) {
+				mutation.mutate({
+					row: cell.row,
+					column: cell.column,
+					isActive: false,
+				});
+			}
+		}
+	}, [cells, mutation]);
+
 	const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setActiveColor(event.target.value);
 	};
@@ -196,6 +208,7 @@ const HomeComponent: React.FC = () => {
 					<GridControls
 						activeColor={activeColor}
 						handleColorChange={handleColorChange}
+						handleReset={handleReset}
 					/>
 					<Grid grid={grid} />
 				</>
@@ -204,7 +217,7 @@ const HomeComponent: React.FC = () => {
 	);
 };
 
-const Home: React.FC = () => (
+const Home = () => (
 	<QueryClientProvider client={queryClient}>
 		<HomeComponent />
 	</QueryClientProvider>
