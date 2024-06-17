@@ -1,6 +1,5 @@
 "use client";
 
-import type React from "react";
 import { useState, useCallback, useMemo } from "react";
 import axios from "axios";
 import {
@@ -47,6 +46,9 @@ const HomeComponent: React.FC = () => {
 		column: number;
 	} | null>(null);
 	const [activeColor, setActiveColor] = useState<string>("#000000");
+	const [clickOrder, setClickOrder] = useState<
+		Array<{ row: number; column: number }>
+	>([]);
 
 	const queryClient = useQueryClient();
 
@@ -120,6 +122,8 @@ const HomeComponent: React.FC = () => {
 				(c) => c.row === row && c.column === column,
 			);
 			const isActive = cell ? !cell.isActive : true;
+
+			setClickOrder((prevOrder) => [...prevOrder, { row, column }]);
 			mutation.mutate({ row, column, isActive });
 		},
 		[initialCells, mutation],
@@ -143,16 +147,15 @@ const HomeComponent: React.FC = () => {
 	);
 
 	const handleReset = useCallback(() => {
-		for (const cell of cells) {
-			if (cell.isActive) {
-				mutation.mutate({
-					row: cell.row,
-					column: cell.column,
-					isActive: false,
-				});
-			}
+		for (const cell of clickOrder) {
+			mutation.mutate({
+				row: cell.row,
+				column: cell.column,
+				isActive: false,
+			});
 		}
-	}, [cells, mutation]);
+		setClickOrder([]);
+	}, [clickOrder, mutation]);
 
 	const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setActiveColor(event.target.value);
