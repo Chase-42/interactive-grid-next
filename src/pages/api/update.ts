@@ -7,23 +7,24 @@ export default async function handler(
 ) {
 	if (req.method === "POST") {
 		try {
-			const { row, column, isActive } = req.body;
+			const { row, column, isActive, clickedOrder } = req.body;
 
 			await db
 				.insert(cells)
-				.values({ row, column, isActive })
+				.values({ row, column, isActive, clickedOrder })
 				.onConflictDoUpdate({
 					target: [cells.row, cells.column],
-					set: { isActive },
+					set: { isActive, clickedOrder },
 				});
 
-			res.status(200).json({ row, column, isActive });
+			res.status(200).json({ row, column, isActive, clickedOrder });
 		} catch (error) {
 			console.error("Error updating cell:", error);
-			res.status(500).json({
-				message:
-					error instanceof Error ? error.message : "An unknown error occurred",
-			});
+			if (error instanceof Error) {
+				res.status(500).json({ message: error.message });
+			} else {
+				res.status(500).json({ message: "An unknown error occurred" });
+			}
 		}
 	} else {
 		res.status(405).json({ message: "Method Not Allowed" });

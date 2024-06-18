@@ -22,6 +22,7 @@ type Cell = {
 	column: number;
 	isActive: boolean;
 	key: string;
+	clickedOrder: number;
 };
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const updateCell = async (cell: {
 	row: number;
 	column: number;
 	isActive: boolean;
+	clickedOrder: number;
 }): Promise<void> => {
 	await axios.post("/api/update", cell);
 };
@@ -46,9 +48,7 @@ const HomeComponent: React.FC = () => {
 		column: number;
 	} | null>(null);
 	const [activeColor, setActiveColor] = useState<string>("#000000");
-	const [clickOrder, setClickOrder] = useState<
-		Array<{ row: number; column: number }>
-	>([]);
+	const [clickOrder, setClickOrder] = useState<number>(1);
 
 	const queryClient = useQueryClient();
 
@@ -65,7 +65,7 @@ const HomeComponent: React.FC = () => {
 	const mutation: UseMutationResult<
 		void,
 		Error,
-		{ row: number; column: number; isActive: boolean }
+		{ row: number; column: number; isActive: boolean; clickedOrder: number }
 	> = useMutation({
 		mutationFn: updateCell,
 		onMutate: async (newCell) => {
@@ -77,7 +77,11 @@ const HomeComponent: React.FC = () => {
 				queryClient.setQueryData<Cell[]>(["cells"], (oldCells) =>
 					oldCells?.map((cell) =>
 						cell.row === newCell.row && cell.column === newCell.column
-							? { ...cell, isActive: newCell.isActive }
+							? {
+									...cell,
+									isActive: newCell.isActive,
+									clickedOrder: newCell.clickedOrder,
+								}
 							: cell,
 					),
 				);
@@ -104,6 +108,7 @@ const HomeComponent: React.FC = () => {
 					column,
 					isActive: false,
 					key: `${row}-${column}`,
+					clickedOrder: 0,
 				};
 				initialCells.push(cell);
 			}
@@ -123,10 +128,10 @@ const HomeComponent: React.FC = () => {
 			);
 			const isActive = cell ? !cell.isActive : true;
 
-			setClickOrder((prevOrder) => [...prevOrder, { row, column }]);
-			mutation.mutate({ row, column, isActive });
+			setClickOrder((prevOrder) => prevOrder + 1);
+			mutation.mutate({ row, column, isActive, clickedOrder: clickOrder });
 		},
-		[initialCells, mutation],
+		[initialCells, mutation, clickOrder],
 	);
 
 	const handleMouseEnter = useCallback((row: number, column: number) => {
@@ -147,15 +152,22 @@ const HomeComponent: React.FC = () => {
 	);
 
 	const handleReset = useCallback(() => {
-		for (const cell of clickOrder) {
-			mutation.mutate({
-				row: cell.row,
-				column: cell.column,
-				isActive: false,
-			});
+		let delay = 0;
+		for (const cell of cells
+			.filter((cell) => cell.isActive)
+			.sort((a, b) => a.clickedOrder - b.clickedOrder)) {
+			setTimeout(() => {
+				mutation.mutate({
+					row: cell.row,
+					column: cell.column,
+					isActive: false,
+					clickedOrder: 0,
+				});
+			}, delay);
+			delay += 200; // Adjust the delay as needed
 		}
-		setClickOrder([]);
-	}, [clickOrder, mutation]);
+		setClickOrder(1);
+	}, [cells, mutation]);
 
 	const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setActiveColor(event.target.value);

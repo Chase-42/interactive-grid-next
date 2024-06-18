@@ -1,3 +1,4 @@
+// src/lib/db.ts
 import { drizzle } from "drizzle-orm/vercel-postgres";
 import { sql } from "@vercel/postgres";
 import {
@@ -20,6 +21,7 @@ export const cells = createTable(
 		row: integer("row").notNull(),
 		column: integer("column").notNull(),
 		isActive: boolean("isActive").notNull(),
+		clickedOrder: integer("clickedOrder").default(0).notNull(),
 	},
 	(table) => ({
 		uniqueRowColumn: uniqueIndex("unique_row_column").on(
