@@ -126,19 +126,23 @@ const HomeComponent: React.FC = () => {
 			const cell = initialCells.find(
 				(c) => c.row === row && c.column === column,
 			);
-			const isActive = cell ? !cell.isActive : true;
+			if (!cell) return;
+
+			const isActive = !cell.isActive;
 
 			setClickOrder((prevOrder) => prevOrder + 1);
-			mutation.mutate({ row, column, isActive, clickedOrder: clickOrder });
+			mutation.mutate({ row, column, isActive, clickedOrder: isActive ? clickOrder : 0 });
 		},
 		[initialCells, mutation, clickOrder],
 	);
 
 	const handleMouseEnter = useCallback((row: number, column: number) => {
+		console.log(`Hovering over cell: Row ${row}, Column ${column}`);
 		setHoveredCell({ row, column });
 	}, []);
 
 	const handleMouseLeave = useCallback(() => {
+		console.log("Mouse left cell");
 		setHoveredCell(null);
 	}, []);
 
@@ -176,19 +180,33 @@ const HomeComponent: React.FC = () => {
 	const grid = useMemo(
 		() =>
 			initialCells.map((cell) => {
-				let className = `cell${cell.isActive ? " active" : ""}`;
-				if (
+				const className = [
+					"cell",
+					cell.isActive && "active",
 					hoveredCell &&
-					(hoveredCell.row === cell.row || hoveredCell.column === cell.column)
-				) {
-					className += " highlight";
-					if (
-						hoveredCell.row === cell.row &&
-						hoveredCell.column === cell.column
-					) {
-						className += " main-highlight";
-					}
-				}
+					!cell.isActive &&
+					(hoveredCell.row === cell.row || hoveredCell.column === cell.column) &&
+					"highlight",
+					hoveredCell &&
+					hoveredCell.row === cell.row &&
+					hoveredCell.column === cell.column &&
+					"main-highlight"
+				]
+					.filter(Boolean)
+					.join(" ");
+
+				const style = {
+					backgroundColor: cell.isActive
+						? activeColor
+						: hoveredCell &&
+						  !cell.isActive &&
+						  (hoveredCell.row === cell.row || hoveredCell.column === cell.column)
+						? hoveredCell.row === cell.row && hoveredCell.column === cell.column
+							? activeColor
+							: `${activeColor}80` // 50% opacity
+						: "#d3d3d3",
+				};
+
 				return (
 					<div
 						key={cell.key}
@@ -199,7 +217,7 @@ const HomeComponent: React.FC = () => {
 						onKeyPress={(event) => handleKeyPress(event, cell.row, cell.column)}
 						role="button"
 						tabIndex={0}
-						style={{ backgroundColor: cell.isActive ? activeColor : "#d3d3d3" }}
+						style={style}
 					/>
 				);
 			}),

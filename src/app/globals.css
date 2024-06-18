@@ -101,11 +101,11 @@ html, body {
 }
 
 .cell.highlight {
-  background-color: rgba(211, 211, 211, 0.5);
+  background-color: rgba(0, 0, 0, 0.5); /* 50% opacity black */
 }
 
 .cell.main-highlight {
-  background-color: #000000;
+  background-color: #000000; /* Bright color for main highlight */
 }
 
 .cell.active-hover {
