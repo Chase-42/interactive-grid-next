@@ -66,6 +66,8 @@ html, body {
   justify-content: center;
   align-items: center;
   margin-top: 10px;
+  transform: scale(0.5);
+  animation: expandGrid 0.5s ease-out forwards;
 }
 
 .cell {
@@ -73,10 +75,10 @@ html, body {
   height: 60px;
   border: 1px solid transparent;
   background-color: #d3d3d3;
-  border-radius: 5px;
+  border-radius: 2.5px;
   cursor: pointer;
   box-shadow: 0 5px 9px 0 rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.5s;
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
@@ -91,6 +93,11 @@ html, body {
   background-color: #000000;
   border-color: #fff;
   border-width: 2px;
+  animation: spinShrink 0.5s forwards;
+}
+
+.cell.inactive {
+  animation: spinShrinkReverse 0.5s forwards;
 }
 
 .cell.highlight {
@@ -119,6 +126,36 @@ html, body {
 @keyframes shimmer {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
+}
+
+@keyframes spinShrink {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(0.5) rotate(180deg);
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+  }
+}
+
+@keyframes spinShrinkReverse {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(0.5) rotate(-180deg);
+  }
+  100% {
+    transform: scale(1) rotate(-360deg);
+  }
+}
+
+@keyframes expandGrid {
+  to {
+    transform: scale(1);
+  }
 }
 
 .error {
